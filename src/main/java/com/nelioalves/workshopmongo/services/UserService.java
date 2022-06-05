@@ -7,22 +7,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.workshopmongo.domain.User;
-import com.nelioalves.workshopmongo.repository.UserRespository;
+import com.nelioalves.workshopmongo.dto.UserDTO;
+import com.nelioalves.workshopmongo.repository.UserRepository;
 import com.nelioalves.workshopmongo.services.exception.ObjectNotFoundException;
 
 @Service
 public class UserService {
 	
 	@Autowired
-	private UserRespository userRespository;
+	private UserRepository userRepository;
 	
 	public List<User> findAll(){
-		return userRespository.findAll();
+		return userRepository.findAll();
 	}
 	
 	public User findById(String id){
-		Optional<User> obj = userRespository.findById(id);
+		Optional<User> obj = userRepository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+	}
+	
+	public User insert(User obj) {
+		return userRepository.save(obj);
+	}
+	
+	public User fromDTO(UserDTO objDTO) {
+		return new User(objDTO.getId(), objDTO.getName(), objDTO.getEmail());
 	}
 	
 }
